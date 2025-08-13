@@ -1,23 +1,22 @@
 // stackbit.config.ts
-import { defineStackbitConfig } from "@stackbit/types";
-import { GitContentSource } from "@stackbit/cms-git";
+export default {
+  stackbitVersion: "~0.6.0",
+  ssgName: "eleventy",
+  nodeVersion: "18",
 
-export default defineStackbitConfig({
-  // ...
-  contentSources: [
-    new GitContentSource({
-      rootPath: __dirname,
-      contentDirs: ["content"],
-      models: [
-        {
-          name: "Page",
-          // Define the model as a page model
-          type: "page",
-          urlPath: "/{slug}",
-          filePath: "content/pages/{slug}.json",
-          fields: [{ name: "title", type: "string", required: true }]
-        }
-      ],
-    })
-  ]
-});
+  // Eleventy to run inside Visual Editor container
+  devCommand: "npx @11ty/eleventy --serve --port {PORT}",
+
+  // Eleventy-specific configuration
+  experimental: {
+    ssg: {
+      proxyWebsockets: true,
+      logPatterns: {
+        up: ["Server at"],
+      }
+    }
+  },
+
+  // Specific option to prevent Visual Editor from interfering with Eleventy's page reload mechanism
+  customContentReload: true
+};
